@@ -1,0 +1,15 @@
+.Player {
+    top: 200px;
+    left: 10px;
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    z-index: 9999;
+}
+
+.Player-img {
+    background: url("./img/texture.png") center no-repeat;
+    background-size: cover;
+    height: 100%;
+    margin: 2px;
+}
