@@ -75,4 +75,11 @@ export class Bot {
     _haveIStep() {
         return this._api.haveIStep();
     }
+
+    /**
+     * Текущая позиция бота.
+     */
+    get myPosition() {
+        return this._api.position;
+    }
 }

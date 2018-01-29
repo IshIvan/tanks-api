@@ -79,7 +79,7 @@ export class Playground {
     initPlayerPositions() {
         this._positions = new Array(this._bots.length).fill(0);
         /** если объединить fill + map в {@link _isUniquePosition} .every undefined */
-        this._positions.map(() => this._createUniquePosition());
+        this._positions = this._positions.map(() => this._createUniquePosition());
         console.log(this._positions);
     }
 
@@ -107,6 +107,10 @@ export class Playground {
         return position
             && this._maps[position.y][position.x] !== CELL_TYPES.barricade
             && this._positions.every(pos => pos.x !== position.x && pos.y !== position.y)
+    }
+
+    getPositionByIndex(index) {
+        return this._positions[index];
     }
 
     /**
@@ -138,8 +142,33 @@ export class Playground {
      */
     doStep() {
         this._bots.forEach(bot => bot.doStep());
+        this._steps.forEach(action => this._changePositionByIndex(action));
         // todo setTimeout nextStep()
-        console.log(this._steps);
+    }
+
+    /**
+     * Изменяем позицию в зависимости от действия.
+     * @param index - порядковый номер бота
+     * @param action - {@link ACTIONS}
+     */
+    _changePositionByIndex(index, action) {
+        const position = this.getPositionByIndex(index);
+        switch (action) {
+            case ACTIONS.left:
+                position.x--;
+                break;
+            case ACTIONS.right:
+                position.x++;
+                break;
+            case ACTIONS.down:
+                position.y++;
+                break;
+            case  ACTIONS.up:
+                position.y--;
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -155,6 +184,13 @@ export class Playground {
      */
     getMap() {
         return this._maps;
+    }
+
+    /**
+     * Получаем всех игроков
+     */
+    getPlayers() {
+        return this._bots || [];
     }
 
     /**

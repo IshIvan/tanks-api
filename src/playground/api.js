@@ -62,4 +62,11 @@ export class Api {
         this._playground.setStepByBotIndex(this._index, ACTIONS.fire);
         this._playground.fireByBotIndex(this._index, [shiftX, shiftY]);
     }
+
+    /**
+     * Получение текущей позиции бота.
+     */
+    get position() {
+        return this._playground.getPositionByIndex(this._index);
+    }
 }
