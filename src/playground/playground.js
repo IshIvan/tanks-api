@@ -3,6 +3,7 @@ import {Loader} from "./loader";
 import {Api} from "./api";
 import {ACTIONS} from "./config/actions";
 import {STATUSES} from "./config/statuses";
+import {CELL_TYPES} from "./config/cell-types";
 
 /**
  * Контроллер карты.
@@ -14,6 +15,7 @@ export class Playground {
         this.register();
         this.initSteps();
         this.initStatuses();
+        this.initPlayerPositions();
         this.start();
     }
 
@@ -48,7 +50,9 @@ export class Playground {
         for (let columnId = 0; columnId < column; columnId++) {
             this._maps[columnId] = [];
             for (let rowId = 0; rowId < row; rowId++) {
-                this._maps[columnId][rowId] = (Math.random() * 100).toFixed(0) < 10 ? 1 : 0;
+                this._maps[columnId][rowId] = (Math.random() * 100).toFixed(0) < 10
+                    ? CELL_TYPES.barricade
+                    : CELL_TYPES.ground;
             }
         }
         // console.table(this._maps);
@@ -66,6 +70,43 @@ export class Playground {
      */
     initStatuses() {
         this._statuses = new Array(this._bots.length).fill(STATUSES.live);
+    }
+
+    /**
+     * Определение позиции игрока.
+     * @todo проверку на препятстсиве
+     */
+    initPlayerPositions() {
+        this._positions = new Array(this._bots.length).fill(0);
+        /** если объединить fill + map в {@link _isUniquePosition} .every undefined */
+        this._positions.map(() => this._createUniquePosition());
+        console.log(this._positions);
+    }
+
+    /**
+     * Создаем уникальную позицию,
+     * которая не будет совпадать с баррикадой и противником.
+     */
+    _createUniquePosition() {
+        let position = null;
+        while (!this._isUniquePosition(position)) {
+            position = {
+                x: (Math.random() * config.column).toFixed(0),
+                y: (Math.random() * config.row).toFixed(0)
+            };
+        }
+        return position;
+    }
+
+    /**
+     * Проверяем позицию на пересечения с противником и баррикадой.
+     * Если ни с чем не пересекается, то true,
+     * иначе false.
+     */
+    _isUniquePosition(position) {
+        return position
+            && this._maps[position.y][position.x] !== CELL_TYPES.barricade
+            && this._positions.every(pos => pos.x !== position.x && pos.y !== position.y)
     }
 
     /**
