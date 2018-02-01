@@ -78,8 +78,16 @@ export class Bot {
 
     /**
      * Текущая позиция бота.
+     * @link Api.position
      */
     get myPosition() {
         return this._api.position;
+    }
+
+    /**
+     * @link Api.enemyPosition
+     */
+    get enemies() {
+        return this._api.enemyPosition;
     }
 }

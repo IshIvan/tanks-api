@@ -4,6 +4,7 @@ import {Api} from "./api";
 import {ACTIONS} from "./config/actions";
 import {STATUSES} from "./config/statuses";
 import {CELL_TYPES} from "./config/cell-types";
+import {ReplaySubject} from "rxjs";
 
 /**
  * Контроллер карты.
@@ -17,6 +18,14 @@ export class Playground {
         this.initStatuses();
         this.initPlayerPositions();
         this.start();
+        this._doStep$$ = new ReplaySubject(1);
+    }
+
+    /**
+     * Генерируем смотрителя для новых ходов.
+     */
+    get stepper$() {
+        return this._doStep$$.asObservable();
     }
 
     /**
@@ -55,7 +64,6 @@ export class Playground {
                     : CELL_TYPES.ground;
             }
         }
-        // console.table(this._maps);
     }
 
     /**
@@ -80,7 +88,6 @@ export class Playground {
         this._positions = new Array(this._bots.length).fill(0);
         /** если объединить fill + map в {@link _isUniquePosition} .every undefined */
         this._positions = this._positions.map(() => this._createUniquePosition());
-        console.log(this._positions);
     }
 
     /**
@@ -91,8 +98,8 @@ export class Playground {
         let position = null;
         while (!this._isUniquePosition(position)) {
             position = {
-                x: (Math.random() * config.column).toFixed(0),
-                y: (Math.random() * config.row).toFixed(0)
+                x: +(Math.random() * config.column).toFixed(0),
+                y: +(Math.random() * config.row).toFixed(0)
             };
         }
         return position;
@@ -109,6 +116,9 @@ export class Playground {
             && this._positions.every(pos => pos.x !== position.x && pos.y !== position.y)
     }
 
+    /**
+     * Позиция бота по его порядковому номеру.
+     */
     getPositionByIndex(index) {
         return this._positions[index];
     }
@@ -142,7 +152,8 @@ export class Playground {
      */
     doStep() {
         this._bots.forEach(bot => bot.doStep());
-        this._steps.forEach(action => this._changePositionByIndex(action));
+        this._steps.forEach(this._changePositionByIndex.bind(this));
+        this._doStep$$.next(true);
         // todo setTimeout nextStep()
     }
 
@@ -151,7 +162,7 @@ export class Playground {
      * @param index - порядковый номер бота
      * @param action - {@link ACTIONS}
      */
-    _changePositionByIndex(index, action) {
+    _changePositionByIndex(action, index) {
         const position = this.getPositionByIndex(index);
         switch (action) {
             case ACTIONS.left:
@@ -189,14 +200,22 @@ export class Playground {
     /**
      * Получаем всех игроков
      */
-    getPlayers() {
+    get players() {
         return this._bots || [];
+    }
+
+    /**
+     * Получаем всех врагов для бота с указанным индексом.
+     */
+    getEnemyPositionForIndex(index) {
+        const myPosition = this.getPositionByIndex(index);
+        return this._positions.filter(position => position !== myPosition);
     }
 
     /**
      * Запуск игры.
      */
     start() {
-        setTimeout(this.doStep.bind(this), 100);
+        setTimeout(this.doStep.bind(this), 3000);
     }
 }

@@ -39,7 +39,7 @@ export class Player extends Component {
      */
     componentWillReceiveProps(nextProps) {
         this._controller = nextProps.controller;
-        this.setPosition(nextProps.y, nextProps.x);
+        this.setPosition(nextProps.top, nextProps.left);
     }
 
     render() {
