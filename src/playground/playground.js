@@ -141,7 +141,7 @@ export class Playground {
             return false;
         }
         return position
-            && this._maps[position.y][position.x] !== CELL_TYPES.barricade
+            && this._maps[position.x][position.y] !== CELL_TYPES.barricade
             && this._positions.every(pos => !(pos.x === position.x && pos.y === position.y))
     }
 
