@@ -29,6 +29,32 @@ export class Playground {
     }
 
     /**
+     * Получаем всех игроков
+     */
+    get players() {
+        return this._bots || [];
+    }
+
+    static _processChangePosition(position, action) {
+        switch (action) {
+            case ACTIONS.left:
+                position.x--;
+                break;
+            case ACTIONS.right:
+                position.x++;
+                break;
+            case ACTIONS.down:
+                position.y++;
+                break;
+            case  ACTIONS.up:
+                position.y--;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * Загружаем объекты-контроллеры ботов.
      */
     load() {
@@ -111,9 +137,12 @@ export class Playground {
      * иначе false.
      */
     _isUniquePosition(position) {
+        if (!position || position.x < 0 || position.y < 0) {
+            return false;
+        }
         return position
             && this._maps[position.y][position.x] !== CELL_TYPES.barricade
-            && this._positions.every(pos => pos.x !== position.x && pos.y !== position.y)
+            && this._positions.every(pos => !(pos.x === position.x && pos.y === position.y))
     }
 
     /**
@@ -140,6 +169,30 @@ export class Playground {
     }
 
     /**
+     * Может ли бот выполнить действие по перемещению.
+     */
+    canPlayerDoesMoveAction(index, action) {
+        const newPos = Object.assign({}, this.getPositionByIndex(index));
+        Playground._processChangePosition(newPos, action);
+        if (!this._isUniquePosition(newPos)) {
+            return false;
+        }
+
+        switch (action) {
+            case ACTIONS.left:
+                return newPos.x > -1;
+            case ACTIONS.right:
+                return newPos.x < config.column;
+            case  ACTIONS.up:
+                return newPos.y > -1;
+            case ACTIONS.down:
+                return newPos.y < config.row;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Добавляем выстрел от бота.
      * @link Api.fire
      */
@@ -154,7 +207,7 @@ export class Playground {
         this._bots.forEach(bot => bot.doStep());
         this._steps.forEach(this._changePositionByIndex.bind(this));
         this._doStep$$.next(true);
-        // todo setTimeout nextStep()
+        this.start();
     }
 
     /**
@@ -164,22 +217,11 @@ export class Playground {
      */
     _changePositionByIndex(action, index) {
         const position = this.getPositionByIndex(index);
-        switch (action) {
-            case ACTIONS.left:
-                position.x--;
-                break;
-            case ACTIONS.right:
-                position.x++;
-                break;
-            case ACTIONS.down:
-                position.y++;
-                break;
-            case  ACTIONS.up:
-                position.y--;
-                break;
-            default:
-                break;
+        if (!this.canPlayerDoesMoveAction(index, action)) {
+            return;
         }
+
+        Playground._processChangePosition(position, action);
     }
 
     /**
@@ -198,13 +240,6 @@ export class Playground {
     }
 
     /**
-     * Получаем всех игроков
-     */
-    get players() {
-        return this._bots || [];
-    }
-
-    /**
      * Получаем всех врагов для бота с указанным индексом.
      */
     getEnemyPositionForIndex(index) {
@@ -216,6 +251,6 @@ export class Playground {
      * Запуск игры.
      */
     start() {
-        setTimeout(this.doStep.bind(this), 3000);
+        setTimeout(this.doStep.bind(this), config.stepTime);
     }
 }

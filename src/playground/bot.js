@@ -17,30 +17,26 @@ export class Bot {
      * Сделать ход.
      */
     doStep() {
-      this._up();
     }
 
     /**
      * Не делать ничего.
-     * @private
      */
-    _sleep() {
+    sleep() {
         this._api.doNothing();
     }
 
     /**
      * Сделать шаг наверх.
-     * @private
      */
-    _up() {
+    up() {
         this._api.up();
     }
 
     /**
      * Сделать шаг вниз.
-     * @private
      */
-    _down() {
+    down() {
         this._api.down();
     }
 
@@ -48,15 +44,14 @@ export class Bot {
      * Сделать шаг влево.
      * @private
      */
-    _left() {
+    left() {
         this._api.left();
     }
 
     /**
      * Сделать шаг вправо.
-     * @private
      */
-    _rigth() {
+    rigth() {
         this._api.right();
     }
 
@@ -72,8 +67,16 @@ export class Bot {
      * Спросить, был ли сделан шаг в данном ходе.
      * Не считается ходом.
      */
-    _haveIStep() {
+    haveIStep() {
         return this._api.haveIStep();
+    }
+
+    /**
+     * @param moveActions
+     * @link Api.canIGoTo
+     */
+    canIDoMoveAction(moveActions) {
+        return this._api.canIGoTo(moveActions);
     }
 
     /**

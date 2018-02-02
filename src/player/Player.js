@@ -27,8 +27,8 @@ export class Player extends Component {
      */
     setPosition(top, left) {
         const style = {
-            top: (top - 1) * CELL_SIZE,
-            left: (left - 1) * CELL_SIZE
+            top: top * CELL_SIZE,
+            left: left * CELL_SIZE
         };
         this.setState({style})
     }

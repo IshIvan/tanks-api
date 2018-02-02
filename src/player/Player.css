@@ -1,4 +1,5 @@
 .Player {
+    transition: .3s all;
     top: 200px;
     left: 10px;
     position: absolute;
