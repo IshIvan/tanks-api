@@ -14,3 +14,19 @@
     height: 100%;
     margin: 2px;
 }
+
+.Player-img_rotate_up {
+    transform: rotate(0deg);
+}
+
+.Player-img_rotate_right {
+    transform: rotate(90deg);
+}
+
+.Player-img_rotate_down {
+    transform: rotate(180deg);
+}
+
+.Player-img_rotate_left {
+    transform: rotate(270deg);
+}

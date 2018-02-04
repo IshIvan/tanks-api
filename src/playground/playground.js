@@ -108,7 +108,6 @@ export class Playground {
 
     /**
      * Определение позиции игрока.
-     * @todo проверку на препятстсиве
      */
     initPlayerPositions() {
         this._positions = new Array(this._bots.length).fill(0);
@@ -137,12 +136,21 @@ export class Playground {
      * иначе false.
      */
     _isUniquePosition(position) {
-        if (!position || position.x < 0 || position.y < 0) {
+        if (!this._isPositionExist(position)) {
             return false;
         }
         return position
             && this._maps[position.x][position.y] !== CELL_TYPES.barricade
             && this._positions.every(pos => !(pos.x === position.x && pos.y === position.y))
+    }
+
+    /**
+     * Позиция существует в пределах игрового поля.
+     */
+    _isPositionExist(position) {
+        return !(!position
+            || position.x < 0 || position.y < 0
+            || position.x >= config.column || position.y >= config.row);
     }
 
     /**
@@ -157,6 +165,13 @@ export class Playground {
      */
     setStepByBotIndex(index, step) {
         this._steps[index] = step;
+    }
+
+    /**
+     * Получаем текущий шаг бота.
+     */
+    getStepByBotIndex(index) {
+        return this._steps[index] || ACTIONS.nothing;
     }
 
     /**

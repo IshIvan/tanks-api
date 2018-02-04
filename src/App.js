@@ -33,7 +33,8 @@ class App extends Component {
      */
     getPlayerNode(player, ind) {
         const pos = player.myPosition;
-        return <Player controller={player}
+        const action = this.playground.getStepByBotIndex(ind);
+        return <Player action={action}
                        key={ind}
                        top={pos.y}
                        left={pos.x}/>
