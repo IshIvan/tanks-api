@@ -18,6 +18,7 @@ export class Playground {
         this.initStatuses();
         this.initPlayerPositions();
         this.start();
+        this._fire = [];
         this._doStep$$ = new ReplaySubject(1);
     }
 
@@ -52,6 +53,15 @@ export class Playground {
             default:
                 break;
         }
+    }
+
+    /**
+     * Позиция существует в пределах игрового поля.
+     */
+    static _isPositionExist(position) {
+        return !(!position
+            || position.x < 0 || position.y < 0
+            || position.x >= config.column || position.y >= config.row);
     }
 
     /**
@@ -136,21 +146,12 @@ export class Playground {
      * иначе false.
      */
     _isUniquePosition(position) {
-        if (!this._isPositionExist(position)) {
+        if (!Playground._isPositionExist(position)) {
             return false;
         }
         return position
             && this._maps[position.x][position.y] !== CELL_TYPES.barricade
             && this._positions.every(pos => !(pos.x === position.x && pos.y === position.y))
-    }
-
-    /**
-     * Позиция существует в пределах игрового поля.
-     */
-    _isPositionExist(position) {
-        return !(!position
-            || position.x < 0 || position.y < 0
-            || position.x >= config.column || position.y >= config.row);
     }
 
     /**
@@ -208,11 +209,36 @@ export class Playground {
     }
 
     /**
+     * Получаем массив всех выстрелов.
+     */
+    get fires() {
+        return this._fire;
+    }
+
+    /**
+     *  Получаем определенный выстрел.
+     */
+    fireByIndex(index) {
+        return this._fire[index];
+    }
+
+    /**
      * Добавляем выстрел от бота.
      * @link Api.fire
      */
-    fireByBotIndex(index, shiftX, shiftY) {
-        // todo добавить рисование выстрела
+    createFireByBotIndex(index, vector) {
+        if (this.getStepByBotIndex(index) !== ACTIONS.fire) {
+            return;
+        }
+
+        this.setStepByBotIndex(index, ACTIONS.fire);
+        const position = Object.assign({}, this.getPositionByIndex(index));
+        Playground._processChangePosition(position, vector);
+        this._fire.push({
+            botIndex: index,
+            position: position,
+            vector: vector
+        })
     }
 
     /**
@@ -220,9 +246,26 @@ export class Playground {
      */
     doStep() {
         this._bots.forEach(bot => bot.doStep());
+        this._processFires();
         this._steps.forEach(this._changePositionByIndex.bind(this));
         this._doStep$$.next(true);
         this.start();
+        this.initSteps();
+    }
+
+    /**
+     * Обработка движения выстрелов.
+     */
+    _processFires() {
+        let index = 0;
+        while (index < this.fires.length) {
+            const {position} = this.fireByIndex(index);
+            if (!Playground._isPositionExist(position)) {
+                this._fire.splice(index, 1);
+                continue;
+            }
+            index++;
+        }
     }
 
     /**

@@ -13,5 +13,6 @@ export class ExampleBot extends Bot {
         } else {
             this.down();
         }
+        this.fire(ACTIONS.up);
     }
 }

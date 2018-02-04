@@ -3,12 +3,14 @@ import './App.css';
 import {Ground} from "./ground/Ground";
 import {Player} from "./player/Player";
 import {Playground} from "./playground/playground";
+import {Fire} from "./fire/Fire";
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
-            players: []
+            players: [],
+            fires: []
         };
         this.initPlayground();
     }
@@ -21,11 +23,11 @@ class App extends Component {
         this.playground = new Playground();
         this.playground
             .stepper$
-            .subscribe(this.setPlayers.bind(this));
+            .subscribe(this.setStepProps.bind(this));
     }
 
     componentWillMount() {
-        this.setPlayers();
+        this.setStepProps();
     }
 
     /**
@@ -40,12 +42,20 @@ class App extends Component {
                        left={pos.x}/>
     }
 
+    getFireNode(fire, ind) {
+        const {x, y} = fire.position;
+        return <Fire key={ind}
+                     top={y}
+                     left={x}/>
+    }
+
     /**
      * Записываем игроков в состояние.
      */
-    setPlayers() {
+    setStepProps() {
         this.setState({
-            players: this.playground.players
+            players: this.playground.players,
+            fires: this.playground.fires
         })
     }
 
@@ -54,6 +64,7 @@ class App extends Component {
             <div className="App">
                 <Ground playground={this.playground}/>
                 {this.state.players.map((player, ind) => this.getPlayerNode(player, ind))}
+                {this.state.fires.map((fire, ind) => this.getFireNode(fire, ind))}
             </div>
         );
     }

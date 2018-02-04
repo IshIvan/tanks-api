@@ -59,8 +59,8 @@ export class Bot {
      * Выстрелить в указанном направлении.
      * @link Api.fire
      */
-    fire(shiftX, shiftY) {
-        this._api.fire(shiftX, shiftY);
+    fire(vector) {
+        this._api.fire(vector);
     }
 
     /**

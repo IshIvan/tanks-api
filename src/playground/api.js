@@ -72,15 +72,10 @@ export class Api {
     /**
      * Выстреливаем в указанном направлении.
      * Необязательно двигаться в этом направлении.
-     * К смещениям применяется XOR.
-     * @param shiftX - лево / право
-     * @param shiftY - верх / низ.
+     * @param vector - ACTION.up | down | left | right.
      */
-    fire(shiftX, shiftY) {
-        if (shiftX !== shiftY) {
-            return;
-        }
+    fire(vector) {
         this._playground.setStepByBotIndex(this._index, ACTIONS.fire);
-        this._playground.fireByBotIndex(this._index, [shiftX, shiftY]);
+        this._playground.createFireByBotIndex(this._index, vector);
     }
 }
