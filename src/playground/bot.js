@@ -51,7 +51,7 @@ export class Bot {
     /**
      * Сделать шаг вправо.
      */
-    rigth() {
+    right() {
         this._api.right();
     }
 
