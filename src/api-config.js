@@ -7,5 +7,5 @@
 export const config = {
     row: 20,
     column: 20,
-    stepTime: 300
+    stepTime: 200
 };

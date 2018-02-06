@@ -5,6 +5,11 @@ import {ACTIONS} from "../playground/config/actions";
  * Тестовый бот.
  */
 export class ExampleBot extends Bot {
+    constructor() {
+        super();
+        this._fire = false;
+    }
+
     doStep() {
         if (this.canIDoMoveAction(ACTIONS.up)) {
             this.up();
@@ -13,6 +18,9 @@ export class ExampleBot extends Bot {
         } else {
             this.down();
         }
-        this.fire(ACTIONS.up);
+        if (!this._fire) {
+            this._fire = true;
+            this.fire(ACTIONS.up);
+        }
     }
 }

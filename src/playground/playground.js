@@ -36,6 +36,13 @@ export class Playground {
         return this._bots || [];
     }
 
+    /**
+     * Получаем массив всех выстрелов.
+     */
+    get fires() {
+        return this._fire;
+    }
+
     static _processChangePosition(position, action) {
         switch (action) {
             case ACTIONS.left:
@@ -209,13 +216,6 @@ export class Playground {
     }
 
     /**
-     * Получаем массив всех выстрелов.
-     */
-    get fires() {
-        return this._fire;
-    }
-
-    /**
      *  Получаем определенный выстрел.
      */
     fireByIndex(index) {
@@ -241,16 +241,27 @@ export class Playground {
         })
     }
 
+    sleep(ms) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+
     /**
      * Запустить просчитывание хода для всех ботов.
      */
-    doStep() {
-        this._bots.forEach(bot => bot.doStep());
-        this._processFires();
+    async doStep() {
+        this._bots
+            .filter((bot, ind) => this._statuses[ind] === STATUSES.live)
+            .forEach(bot => bot.doStep());
+
+        for (let stepIndex = 0; stepIndex < 2; stepIndex++) {
+            this._doStep$$.next(false);
+            this._processFires();
+            await this.sleep(config.stepTime);
+        }
+
         this._steps.forEach(this._changePositionByIndex.bind(this));
         this._doStep$$.next(true);
         this.start();
-        this.initSteps();
     }
 
     /**
@@ -267,10 +278,8 @@ export class Playground {
             }
 
             // иначе изменяем позицию
-            for (let stepIndex = 0; stepIndex < 2; stepIndex++) {
-                this._playerOnFire(index);
-                Playground._processChangePosition(position, vector);
-            }
+            this._playerOnFire(index);
+            Playground._processChangePosition(position, vector);
             index++;
         }
     }
@@ -279,31 +288,11 @@ export class Playground {
      * Проверяем персонажей под огнем.
      */
     _playerOnFire(index) {
-        const {position} = this.fireByIndex(index);
-        const pos = this.getEnemyPositionForIndex(index);
-        const botIndex = pos.findIndex(enemyPos => enemyPos.x === position.x && enemyPos.y === position.y);
-        if (botIndex !== -1) {
-            this._statuses[botIndex]--;
-            this._checkStatus(botIndex);
-        }
-    }
-
-    /**
-     * Проверяем статус бота,
-     * если количество
-     */
-    _checkStatus(index) {
-        if (this._statuses[index] <= 0) {
-            this._statuses.splice(index, 1);
-            this._bots.splice(index, 1);
-            this._positions.splice(index, 1);
-            this._fire = this._fire
-                .map(fire => {
-                    if (fire.botIndex === index) {
-                        fire.botIndex = -1;
-                    }
-                    return fire;
-                });
+        const {botIndex, position} = this.fireByIndex(index);
+        const pos = this.getEnemyPositionForIndex(botIndex);
+        const enemyIndex = pos.findIndex(enemyPos => enemyPos.x === position.x && enemyPos.y === position.y);
+        if (enemyIndex !== -1) {
+            this._statuses[enemyIndex] = STATUSES.dead;
         }
     }
 
@@ -352,6 +341,7 @@ export class Playground {
      * Запуск игры.
      */
     start() {
+        this.initSteps();
         setTimeout(this.doStep.bind(this), config.stepTime);
     }
 }
