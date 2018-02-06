@@ -5,7 +5,7 @@ import {ACTIONS} from "../playground/config/actions";
 /**
  * Размер ячейки в px.
  */
-const CELL_SIZE = 50;
+export const CELL_SIZE = 50;
 
 export class Player extends Component {
     constructor(props) {

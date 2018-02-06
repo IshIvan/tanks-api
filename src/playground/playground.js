@@ -259,12 +259,51 @@ export class Playground {
     _processFires() {
         let index = 0;
         while (index < this.fires.length) {
-            const {position} = this.fireByIndex(index);
+            const {position, vector} = this.fireByIndex(index);
             if (!Playground._isPositionExist(position)) {
+                // если вышло за поле, то удаляем
                 this._fire.splice(index, 1);
                 continue;
             }
+
+            // иначе изменяем позицию
+            for (let stepIndex = 0; stepIndex < 2; stepIndex++) {
+                this._playerOnFire(index);
+                Playground._processChangePosition(position, vector);
+            }
             index++;
+        }
+    }
+
+    /**
+     * Проверяем персонажей под огнем.
+     */
+    _playerOnFire(index) {
+        const {position} = this.fireByIndex(index);
+        const pos = this.getEnemyPositionForIndex(index);
+        const botIndex = pos.findIndex(enemyPos => enemyPos.x === position.x && enemyPos.y === position.y);
+        if (botIndex !== -1) {
+            this._statuses[botIndex]--;
+            this._checkStatus(botIndex);
+        }
+    }
+
+    /**
+     * Проверяем статус бота,
+     * если количество
+     */
+    _checkStatus(index) {
+        if (this._statuses[index] <= 0) {
+            this._statuses.splice(index, 1);
+            this._bots.splice(index, 1);
+            this._positions.splice(index, 1);
+            this._fire = this._fire
+                .map(fire => {
+                    if (fire.botIndex === index) {
+                        fire.botIndex = -1;
+                    }
+                    return fire;
+                });
         }
     }
 
@@ -301,6 +340,10 @@ export class Playground {
      * Получаем всех врагов для бота с указанным индексом.
      */
     getEnemyPositionForIndex(index) {
+        if (index === -1) {
+            return this._positions;
+        }
+
         const myPosition = this.getPositionByIndex(index);
         return this._positions.filter(position => position !== myPosition);
     }
