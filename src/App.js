@@ -36,7 +36,9 @@ class App extends Component {
     getPlayerNode(player, ind) {
         const pos = player.myPosition;
         const action = this.playground.getStepByBotIndex(ind);
+        const isLive = this.playground.isBotLiveByIndex(ind);
         return <Player action={action}
+                       live={isLive}
                        key={ind}
                        top={pos.y}
                        left={pos.x}/>

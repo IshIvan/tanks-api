@@ -231,7 +231,6 @@ export class Playground {
             return;
         }
 
-        this.setStepByBotIndex(index, ACTIONS.fire);
         const position = Object.assign({}, this.getPositionByIndex(index));
         Playground._processChangePosition(position, vector);
         this._fire.push({
@@ -250,7 +249,7 @@ export class Playground {
      */
     async doStep() {
         this._bots
-            .filter((bot, ind) => this._statuses[ind] === STATUSES.live)
+            .filter((_, ind) => this.isBotLiveByIndex(ind))
             .forEach(bot => bot.doStep());
 
         for (let stepIndex = 0; stepIndex < 2; stepIndex++) {
@@ -259,9 +258,18 @@ export class Playground {
             await this.sleep(config.stepTime);
         }
 
-        this._steps.forEach(this._changePositionByIndex.bind(this));
+        this._steps
+            .forEach(this._changePositionByIndex.bind(this));
+
         this._doStep$$.next(true);
         this.start();
+    }
+
+    /**
+     * Бот с указанным индексом жив.
+     */
+    isBotLiveByIndex(index) {
+        return this._statuses[index] === STATUSES.live;
     }
 
     /**
@@ -292,6 +300,7 @@ export class Playground {
         const pos = this.getEnemyPositionForIndex(botIndex);
         const enemyIndex = pos.findIndex(enemyPos => enemyPos.x === position.x && enemyPos.y === position.y);
         if (enemyIndex !== -1) {
+            console.log(botIndex, enemyIndex);
             this._statuses[enemyIndex] = STATUSES.dead;
         }
     }
@@ -329,12 +338,8 @@ export class Playground {
      * Получаем всех врагов для бота с указанным индексом.
      */
     getEnemyPositionForIndex(index) {
-        if (index === -1) {
-            return this._positions;
-        }
-
-        const myPosition = this.getPositionByIndex(index);
-        return this._positions.filter(position => position !== myPosition);
+        const myPos = this.getPositionByIndex(index);
+        return this._positions.filter(pos => !(pos.x === myPos.x && pos.y === myPos.y));
     }
 
     /**

@@ -30,3 +30,8 @@
 .Player-img_rotate_left {
     transform: rotate(270deg);
 }
+
+.Player-img_live {}
+.Player-img_dead {
+    background-color: red;
+}

@@ -14,12 +14,18 @@ export class Player extends Component {
             style: {
                 left: 0,
                 top: 0
-            }
+            },
+            isLive: true
         };
     }
 
     componentWillMount() {
         this.setPosition(this.props.top, this.props.left);
+        this.setLive(this.props.live);
+    }
+
+    setLive(isLive) {
+        this.setState({isLive});
     }
 
     /**
@@ -39,6 +45,7 @@ export class Player extends Component {
      */
     componentWillReceiveProps(nextProps) {
         this.setPosition(nextProps.top, nextProps.left);
+        this.setLive(this.props.live);
     }
 
     /**
@@ -56,9 +63,14 @@ export class Player extends Component {
         return 'up';
     }
 
+    get isLiveClass() {
+        return this.state.isLive ? 'live' : 'dead';
+    }
+
     render() {
         const {action} = this.props;
-        const className = `Player Player-img_rotate_${Player.getRotateClassName(action)}`;
+        const className =
+            `Player Player-img_rotate_${Player.getRotateClassName(action)} Player-img_${this.isLiveClass}`;
         return (
             <div className={className}
                  style={this.state.style}
