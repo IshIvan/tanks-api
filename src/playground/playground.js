@@ -164,8 +164,8 @@ export class Playground {
     /**
      * Позиция бота по его порядковому номеру.
      */
-    getPositionByIndex(index) {
-        return this._positions[index];
+    getImmutablePositionByIndex(index) {
+        return Object.assign({}, this._positions[index]);
     }
 
     /**
@@ -195,7 +195,7 @@ export class Playground {
      * Может ли бот выполнить действие по перемещению.
      */
     canPlayerDoesMoveAction(index, action) {
-        const newPos = Object.assign({}, this.getPositionByIndex(index));
+        const newPos = this.getImmutablePositionByIndex(index);
         Playground._processChangePosition(newPos, action);
         if (!this._isUniquePosition(newPos)) {
             return false;
@@ -231,7 +231,7 @@ export class Playground {
             return;
         }
 
-        const position = Object.assign({}, this.getPositionByIndex(index));
+        const position = this.getImmutablePositionByIndex(index);
         Playground._processChangePosition(position, vector);
         this._fire.push({
             botIndex: index,
@@ -311,7 +311,7 @@ export class Playground {
      * @param action - {@link ACTIONS}
      */
     _changePositionByIndex(action, index) {
-        const position = this.getPositionByIndex(index);
+        const position = this._positions[index];
         if (!this.canPlayerDoesMoveAction(index, action)) {
             return;
         }
@@ -338,8 +338,10 @@ export class Playground {
      * Получаем всех врагов для бота с указанным индексом.
      */
     getEnemyPositionForIndex(index) {
-        const myPos = this.getPositionByIndex(index);
-        return this._positions.filter(pos => !(pos.x === myPos.x && pos.y === myPos.y));
+        const myPos = this.getImmutablePositionByIndex(index);
+        return this._positions
+            .filter(pos => !(pos.x === myPos.x && pos.y === myPos.y))
+            .map(pos => Object.assign({}, pos));
     }
 
     /**

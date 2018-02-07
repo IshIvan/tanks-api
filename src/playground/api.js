@@ -10,7 +10,7 @@ export class Api {
      * Получение текущей позиции бота.
      */
     get position() {
-        return this._playground.getPositionByIndex(this._index);
+        return this._playground.getImmutablePositionByIndex(this._index);
     }
 
     /**
