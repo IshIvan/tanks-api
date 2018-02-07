@@ -252,7 +252,7 @@ export class Playground {
             .filter((_, ind) => this.isBotLiveByIndex(ind))
             .forEach(bot => bot.doStep());
 
-        for (let stepIndex = 0; stepIndex < 2; stepIndex++) {
+        for (let stepIndex = 0; stepIndex < config.multipleFactorFireSpeed; stepIndex++) {
             this._doStep$$.next(false);
             this._processFires();
             await this.sleep(config.stepTime);
