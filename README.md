@@ -67,6 +67,16 @@ export class ExampleBot extends Bot {
     fire(vector)
 ```
 
+Получить все выстрелы можно методом:
+```javascript
+    get fires(): Fire[]
+
+    class Fire {
+        position: {x: number, y: number},
+        vector: moveActions
+    }
+```
+
 ### Методы ориентирования
 Данные методы не будут засчитаны как ход, однакое не следует ими злоупотреблять.
 
