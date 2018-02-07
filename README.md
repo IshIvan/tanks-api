@@ -18,6 +18,10 @@ export class ExampleBot extends Bot {
 
 В методе `doStep()` необходимо описать поведение бота на текущий ход.
 
+[Пример бота](https://github.com/IshIvan/tanks-api/blob/master/src/bots/example-bot.js)
+
+[Желательная директория для ваших ботов](https://github.com/IshIvan/tanks-api/tree/master/src/bots)
+
 ### Важно:
 * Бот не должен вмешиваться в работу других ботов.
 * Бот не должен переопределять какие-либо другие методы или свойства.
