@@ -78,4 +78,13 @@ export class Api {
         this._playground.setStepByBotIndex(this._index, ACTIONS.fire);
         this._playground.createFireByBotIndex(this._index, vector);
     }
+
+    /**
+     * Любой выстрел отнимает хп.
+     * Даже если бот попал сам по себе.
+     */
+    get fires() {
+        return this._playground.fires;
+    }
 }
+

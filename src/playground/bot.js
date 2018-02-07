@@ -93,4 +93,11 @@ export class Bot {
     get enemies() {
         return this._api.enemyPosition;
     }
+
+    /**
+     * Геттер всех выстрелов.
+     */
+    get fires() {
+        return this._api.fires;
+    }
 }
