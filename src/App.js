@@ -44,9 +44,12 @@ class App extends Component {
                        left={pos.x}/>
     }
 
-    getFireNode(fire, ind) {
+    /**
+     * Формируем элемент выстрела.
+     */
+    getFireNode(fire) {
         const {x, y} = fire.position;
-        return <Fire key={ind}
+        return <Fire key={fire.id}
                      top={y}
                      left={x}/>
     }
@@ -65,8 +68,8 @@ class App extends Component {
         return (
             <div className="App">
                 <Ground playground={this.playground}/>
-                {this.state.players.map((player, ind) => this.getPlayerNode(player, ind))}
-                {this.state.fires.map((fire, ind) => this.getFireNode(fire, ind))}
+                {this.state.players.map(this.getPlayerNode.bind(this))}
+                {this.state.fires.map(this.getFireNode.bind(this))}
             </div>
         );
     }

@@ -3,8 +3,11 @@
     top: 200px;
     left: 10px;
     position: absolute;
-    height: 50px;
-    width: 50px;
+    transform: translateX(20px);
+    height: 10px;
+    width: 10px;
     z-index: 9999;
     background-color: black;
+    border: 1px solid red;
+    border-radius: 5px;
 }

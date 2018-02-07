@@ -7,6 +7,28 @@ export class Bot {
     }
 
     /**
+     * Текущая позиция бота.
+     * @link Api.position
+     */
+    get myPosition() {
+        return this._api.position;
+    }
+
+    /**
+     * @link Api.enemyPosition
+     */
+    get enemies() {
+        return this._api.enemyPosition;
+    }
+
+    /**
+     * Геттер всех выстрелов.
+     */
+    get fires() {
+        return this._api.fires;
+    }
+
+    /**
      * Зарегистировать бота через его АПИ.
      */
     register(api) {
@@ -77,27 +99,5 @@ export class Bot {
      */
     canIDoMoveAction(moveActions) {
         return this._api.canIGoTo(moveActions);
-    }
-
-    /**
-     * Текущая позиция бота.
-     * @link Api.position
-     */
-    get myPosition() {
-        return this._api.position;
-    }
-
-    /**
-     * @link Api.enemyPosition
-     */
-    get enemies() {
-        return this._api.enemyPosition;
-    }
-
-    /**
-     * Геттер всех выстрелов.
-     */
-    get fires() {
-        return this._api.fires;
     }
 }

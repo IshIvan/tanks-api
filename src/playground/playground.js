@@ -5,6 +5,7 @@ import {ACTIONS} from "./config/actions";
 import {STATUSES} from "./config/statuses";
 import {CELL_TYPES} from "./config/cell-types";
 import {ReplaySubject} from "rxjs";
+import {FireController} from "./fire-contoller";
 
 /**
  * Контроллер карты.
@@ -18,7 +19,7 @@ export class Playground {
         this.initStatuses();
         this.initPlayerPositions();
         this.start();
-        this._fire = [];
+        this._fireController = new FireController(this);
         this._doStep$$ = new ReplaySubject(1);
     }
 
@@ -40,7 +41,7 @@ export class Playground {
      * Получаем массив всех выстрелов.
      */
     get fires() {
-        return this._fire;
+        return this._fireController.immutableFires;
     }
 
     static _processChangePosition(position, action) {
@@ -216,13 +217,6 @@ export class Playground {
     }
 
     /**
-     *  Получаем определенный выстрел.
-     */
-    fireByIndex(index) {
-        return this._fire[index];
-    }
-
-    /**
      * Добавляем выстрел от бота.
      * @link Api.fire
      */
@@ -233,11 +227,7 @@ export class Playground {
 
         const position = this.getImmutablePositionByIndex(index);
         Playground._processChangePosition(position, vector);
-        this._fire.push({
-            botIndex: index,
-            position: position,
-            vector: vector
-        })
+        this._fireController.create(index, position, vector);
     }
 
     sleep(ms) {
@@ -254,7 +244,7 @@ export class Playground {
 
         for (let stepIndex = 0; stepIndex < config.multipleFactorFireSpeed; stepIndex++) {
             this._doStep$$.next(false);
-            this._processFires();
+            this._fireController.process();
             await this.sleep(config.stepTime);
         }
 
@@ -273,32 +263,11 @@ export class Playground {
     }
 
     /**
-     * Обработка движения выстрелов.
-     */
-    _processFires() {
-        let index = 0;
-        while (index < this.fires.length) {
-            const {position, vector} = this.fireByIndex(index);
-            if (!Playground._isPositionExist(position)) {
-                // если вышло за поле, то удаляем
-                this._fire.splice(index, 1);
-                continue;
-            }
-
-            // иначе изменяем позицию
-            this._playerOnFire(index);
-            Playground._processChangePosition(position, vector);
-            index++;
-        }
-    }
-
-    /**
      * Проверяем персонажей под огнем.
      */
-    _playerOnFire(index) {
-        const {botIndex, position} = this.fireByIndex(index);
-        const pos = this.getEnemyPositionForIndex(botIndex);
-        const enemyIndex = pos.findIndex(enemyPos => enemyPos.x === position.x && enemyPos.y === position.y);
+    playerOnFire(botIndex, firePos) {
+        const pos = this._positions;
+        const enemyIndex = pos.findIndex(botPos => botPos.x === firePos.x && botPos.y === firePos.y);
         if (enemyIndex !== -1) {
             console.log(botIndex, enemyIndex);
             this._statuses[enemyIndex] = STATUSES.dead;
@@ -336,6 +305,9 @@ export class Playground {
 
     /**
      * Получаем всех врагов для бота с указанным индексом.
+     * ВАЖНО: используя данный метод, вы исключите себя из массива позиций.
+     * СЛЕДОВАТЕЛЬНО: нельзя использовать !!!botIndex!!!
+     * Так как он будет некорректным после вашего индекса.
      */
     getEnemyPositionForIndex(index) {
         const myPos = this.getImmutablePositionByIndex(index);
