@@ -73,6 +73,13 @@ export class Playground {
     }
 
     /**
+     * Спрашиваем является ли указанная позиция препятствием.
+     */
+    positionIsBarricade(position) {
+        return this._maps[position.x][position.y] === CELL_TYPES.barricade;
+    }
+
+    /**
      * Загружаем объекты-контроллеры ботов.
      */
     load() {
@@ -269,8 +276,9 @@ export class Playground {
         const pos = this._positions;
         const enemyIndex = pos.findIndex(botPos => botPos.x === firePos.x && botPos.y === firePos.y);
         if (enemyIndex !== -1) {
-            console.log(botIndex, enemyIndex);
             this._statuses[enemyIndex] = STATUSES.dead;
+            const {x, y} = pos[enemyIndex];
+            this._maps[x][y] = CELL_TYPES.ground;
         }
     }
 

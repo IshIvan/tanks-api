@@ -20,7 +20,7 @@ export class FireController {
         let index = 0;
         while (index < this._mutableFires.length) {
             const {botIndex, position, vector} = this.getByIndex(index);
-            if (!Playground._isPositionExist(position)) {
+            if (!Playground._isPositionExist(position) || this._playground.positionIsBarricade(position)) {
                 // если вышло за поле, то удаляем
                 this.deleteByIndex(index);
                 continue;
