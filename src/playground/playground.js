@@ -131,6 +131,7 @@ export class Playground {
         this._positions = new Array(this._bots.length).fill(0);
         /** если объединить fill + map в {@link _isUniquePosition} .every undefined */
         this._positions = this._positions.map(() => this._createUniquePosition());
+        this._positions.forEach(pos => this._maps[pos.x][pos.y] = CELL_TYPES.player);
     }
 
     /**
@@ -158,8 +159,7 @@ export class Playground {
             return false;
         }
         return position
-            && this._maps[position.x][position.y] !== CELL_TYPES.barricade
-            && this._positions.every(pos => !(pos.x === position.x && pos.y === position.y))
+            && this._maps[position.x][position.y] === CELL_TYPES.ground;
     }
 
     /**
@@ -285,7 +285,9 @@ export class Playground {
             return;
         }
 
+        this._maps[position.x][position.y] = CELL_TYPES.ground;
         Playground._processChangePosition(position, action);
+        this._maps[position.x][position.y] = CELL_TYPES.player;
     }
 
     /**
