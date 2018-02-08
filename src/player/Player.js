@@ -15,6 +15,7 @@ export class Player extends Component {
                 left: 0,
                 top: 0
             },
+            imgStyle: {},
             isLive: true
         };
     }
@@ -40,12 +41,20 @@ export class Player extends Component {
     }
 
     /**
+     * Устанавливаем стили подложке бота.
+     */
+    setImgStyle(imgStyle) {
+        this.setState({imgStyle});
+    }
+
+    /**
      * Установим новое состояние.
      * Для абсолютного позиционирования.
      */
     componentWillReceiveProps(nextProps) {
         this.setPosition(nextProps.top, nextProps.left);
         this.setLive(this.props.live);
+        this.setImgStyle(this.props.imgStyle);
     }
 
     /**
@@ -75,7 +84,7 @@ export class Player extends Component {
             <div className={className}
                  style={this.state.style}
             >
-                <div className="Player-img"></div>
+                <div className="Player-img" style={this.state.imgStyle}></div>
             </div>
         );
     }

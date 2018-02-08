@@ -6,6 +6,12 @@ import {config} from "../api-config";
 export class Bot {
     constructor() {
         this._api = null;
+        this.name = 'Меня не переименовали';
+        this.style = {
+            imgStyle: {
+                backgroundColor: 'black'
+            }
+        };
     }
 
     /**
@@ -101,6 +107,15 @@ export class Bot {
      */
     canIDoMoveAction(moveActions) {
         return this._api.canIGoTo(moveActions);
+    }
+
+    /**
+     * Задать цвет боту.
+     */
+    setBackgroundColor(color) {
+        this.style.imgStyle = {
+            backgroundColor: color
+        };
     }
 
     /**

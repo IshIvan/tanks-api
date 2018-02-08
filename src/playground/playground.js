@@ -6,6 +6,7 @@ import {STATUSES} from "./config/statuses";
 import {CELL_TYPES} from "./config/cell-types";
 import {ReplaySubject} from "rxjs";
 import {FireController} from "./fire-contoller";
+import {randomizeColor} from "./randomize-color";
 
 /**
  * Контроллер карты.
@@ -104,6 +105,7 @@ export class Playground {
         this._bots.forEach((bot, ind) => {
             const api = new Api(this, ind);
             bot.register(api);
+            bot.setBackgroundColor(randomizeColor(ind));
         })
     }
 
