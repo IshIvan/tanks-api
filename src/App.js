@@ -4,6 +4,7 @@ import {Ground} from "./ground/Ground";
 import {Player} from "./player/Player";
 import {Playground} from "./playground/playground";
 import {Fire} from "./fire/Fire";
+import {Score} from "./score/Score";
 
 class App extends Component {
     constructor() {
@@ -71,6 +72,7 @@ class App extends Component {
                 <Ground map={this.playground.immutableMap}/>
                 {this.state.players.map(this.getPlayerNode.bind(this))}
                 {this.state.fires.map(this.getFireNode.bind(this))}
+                <Score/>
             </div>
         );
     }

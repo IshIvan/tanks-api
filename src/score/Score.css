@@ -1,0 +1,11 @@
+.Score {
+    margin: 10px;
+}
+
+.Score-Header {
+    font-size: 30px;
+}
+
+.Score-Item {
+    font-size: 25px;
+}
