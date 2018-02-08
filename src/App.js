@@ -67,7 +67,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Ground playground={this.playground}/>
+                <Ground map={this.playground.immutableMap}/>
                 {this.state.players.map(this.getPlayerNode.bind(this))}
                 {this.state.fires.map(this.getFireNode.bind(this))}
             </div>

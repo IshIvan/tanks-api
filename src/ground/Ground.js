@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 
 export class Ground extends Component {
     render() {
-        const pl = this.props.playground;
+        const {map} = this.props;
         return (
             <div className="Ground">
-                {pl._maps.map((col, colIndex) => <Column key={colIndex}
-                                                         column={pl.getRow(colIndex)}/>
+                {map.map((col, colIndex) => <Column key={colIndex}
+                                                         column={col}/>
                 )}
             </div>
         );
@@ -17,5 +17,5 @@ export class Ground extends Component {
 }
 
 Ground.propTypes = {
-    playground: PropTypes.object.isRequired
+    map: PropTypes.array.isRequired
 };

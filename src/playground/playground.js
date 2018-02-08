@@ -44,6 +44,14 @@ export class Playground {
         return this._fireController.immutableFires;
     }
 
+    /**
+     * Получаем копию карты.
+     */
+    get immutableMap() {
+        return this._maps
+            .map(column => column.slice())
+    }
+
     static _processChangePosition(position, action) {
         switch (action) {
             case ACTIONS.left:
@@ -296,21 +304,6 @@ export class Playground {
         this._maps[position.x][position.y] = CELL_TYPES.ground;
         Playground._processChangePosition(position, action);
         this._maps[position.x][position.y] = CELL_TYPES.player;
-    }
-
-    /**
-     * Получаем строку по номеру столбца
-     * @param columnIndex
-     */
-    getRow(columnIndex) {
-        return this.getMap()[columnIndex];
-    }
-
-    /**
-     * Получение карты.
-     */
-    getMap() {
-        return this._maps;
     }
 
     /**
