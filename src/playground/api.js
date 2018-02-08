@@ -86,5 +86,12 @@ export class Api {
     get fires() {
         return this._playground.fires;
     }
+
+    /**
+     * Получаем всю карту.
+     */
+    get gameMap() {
+        return this._playground.immutableMap;
+    }
 }
 

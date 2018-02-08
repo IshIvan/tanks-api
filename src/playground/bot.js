@@ -1,6 +1,8 @@
 /**
  * Класс бота, который необходимо наследовать для реализации своей логики.
  */
+import {config} from "../api-config";
+
 export class Bot {
     constructor() {
         this._api = null;
@@ -99,5 +101,20 @@ export class Bot {
      */
     canIDoMoveAction(moveActions) {
         return this._api.canIGoTo(moveActions);
+    }
+
+    /**
+     * Получить игровую карту.
+     */
+    get gameMap() {
+        return this._api.gameMap;
+    }
+
+    /**
+     * Получить размеры карты.
+     * @return number[], где первое число - количество столбцов, а второе - строк.
+     */
+    get gameMapSize() {
+        return [config.column, config.row];
     }
 }
