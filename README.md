@@ -32,6 +32,7 @@ export class ExampleBot extends Bot {
 ### Важно:
 * Бот не должен вмешиваться в работу других ботов.
 * Бот не должен переопределять какие-либо другие методы или свойства.
+* Бот не должен обращаться к `api-config.js`
 * Бот может создавать свои методы и свойства.
 * Результатом `doStep()` будет являться любой ход отличный от `ACTIONS.nothing`
 * `doStep()` ничего не возвращает, следовательно, можно определить любое количество действий подряд, но выполнится **только последнее**.
@@ -88,6 +89,17 @@ export class ExampleBot extends Bot {
 Узнать местоположение всех `STATUS.live` противников:
 ```javascript
     enemies: [{x: number, y: number}]
+```
+
+Получить всю карту на текущий ход:
+```javascript
+    gameMap: Array<Array<cellType>>;
+    cellType = CELL_TYPES.ground | barricade | player
+```
+
+Узнать размер карты:
+```javascript
+    gameMapSize: [columnNumber: number, rowNumber: number]
 ```
 
 ### Действия
