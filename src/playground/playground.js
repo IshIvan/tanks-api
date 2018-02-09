@@ -258,6 +258,9 @@ export class Playground {
         }
 
         const position = this.getImmutablePositionByIndex(index);
+        if (vector < 0) {
+            vector = ACTIONS.up;
+        }
         Playground._processChangePosition(position, vector);
         this._fireController.create(index, position, vector);
     }

@@ -74,7 +74,7 @@ export class Api {
      * Необязательно двигаться в этом направлении.
      * @param vector - ACTION.up | down | left | right.
      */
-    fire(vector) {
+    fire(vector = ACTIONS.up) {
         this._playground.setStepByBotIndex(this._index, ACTIONS.fire);
         this._playground.createFireByBotIndex(this._index, vector);
     }

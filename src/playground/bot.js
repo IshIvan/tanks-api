@@ -2,6 +2,7 @@
  * Класс бота, который необходимо наследовать для реализации своей логики.
  */
 import {config} from "../api-config";
+import {ACTIONS} from "./config/actions";
 
 export class Bot {
     constructor() {
@@ -89,7 +90,7 @@ export class Bot {
      * Выстрелить в указанном направлении.
      * @link Api.fire
      */
-    fire(vector) {
+    fire(vector = ACTIONS.up) {
         this._api.fire(vector);
     }
 
