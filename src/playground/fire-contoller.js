@@ -25,7 +25,7 @@ export class FireController {
      */
     get immutableFires() {
         return this._fires
-            .map(fire => Object.assign({}, fire));
+            .map(fire => Object.assign({}, fire, {position: Object.assign({}, fire.position)}));
     }
 
     /**
