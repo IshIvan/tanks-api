@@ -2,119 +2,65 @@ import {Bot} from "../playground/bot";
 import {ACTIONS} from "../playground/config/actions";
 
 /**
- * Бот Юра.
+ * Тестовый бот.
  */
-
 export class YuryBot extends Bot {
     constructor() {
         super();
         this._fire = false;
-        this.name = 'Юра';
+        this.randomStep = 0;
+        this.randomFire = 0;
+        this.name = 'Ветерок';
+        this.stepCount = 0;
+    }
+
+    doRandomStep(min, max) {
+        let random = (Math.random() * (max - min) + min);
+        this.randomStep = Number((random).toFixed(0));
+        return this.randomStep;
+    }
+
+    doRandomFire(min, max) {
+        let random = (Math.random() * (max - min) + min);
+        this.randomFire = Number((random).toFixed(0));
+        return this.randomFire;
     }
 
     doStep() {
-        if (this.canIDoMoveAction(ACTIONS.up)) {
+        this.doRandomStep(0, 4);
+
+        if (this.randomStep === 0) {
             this.up();
-
-        } else if (this.canIDoMoveAction(ACTIONS.right)) {
+            this.stepCount += 1;
+        } else if (this.randomStep === 1) {
             this.right();
-
-        } else if (this.canIDoMoveAction(ACTIONS.left)) {
+            this.stepCount += 1;
+        } else if (this.randomStep === 2) {
+            this.down();
+            this.stepCount += 1;
+        } else if (this.randomStep === 3) {
             this.left();
+            this.stepCount += 1;
+        }
 
-        } else if (this.canIDoMoveAction(ACTIONS.down)) {
-            this.down();
+        if (this.stepCount % 6 === 0) {
+            this.doRandomFire(0, 4);
 
-        }   // Если нельзя ехать наверх и влево
-            else if (!this.canIDoMoveAction(ACTIONS.left) && !this.canIDoMoveAction(ACTIONS.up)) {
-
-            // Но можно вниз
-            if (this.canIDoMoveAction(ACTIONS.down)) {
-                this.down();
-                this.right();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.down);
-
-            }  else {
-                this.right();
-                this.down();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.right);
-            }
-
-        }   // Если нельзя ехать наверх и вправо
-            else if (!this.canIDoMoveAction(ACTIONS.right) && !this.canIDoMoveAction(ACTIONS.up)) {
-
-            // Но можно вниз
-            if (this.canIDoMoveAction(ACTIONS.down)) {
-                this.down();
-                this.left();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.down);
-
-            }  else {
-                this.left();
-                this.down();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.left);
-            }
-
-        }   // Если нельзя ехать вниз и вправо
-            else if (!this.canIDoMoveAction(ACTIONS.right) && !this.canIDoMoveAction(ACTIONS.down)) {
-
-            // Но можно вверх
-            if (this.canIDoMoveAction(ACTIONS.up)) {
-                this.up();
-                this.left();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.up);
-
-            }  else {
-                this.left();
-                this.up();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.left);
-            }
-
-        }   // Если нельзя ехать вниз и влево
-            else if (!this.canIDoMoveAction(ACTIONS.left) && !this.canIDoMoveAction(ACTIONS.down)) {
-
-            // Но можно вверх
-            if (this.canIDoMoveAction(ACTIONS.up)) {
-                this.up();
-                this.right();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.up);
-
-            }  else {
-                this.right();
-                this.up();
-
-                // Стрелять вниз при развороте
-                // this.fire(ACTIONS.right);
-            }
-
-        }   // Если ничего не подходит, то пытайся бежать вниз
-
-        else {
-            this.down();
-            this.fire(ACTIONS.down);
-            if (!this.haveIStep()) {
-                this.up();
+            if (this.randomFire === 0) {
                 this.fire(ACTIONS.up);
+                this.doRandomStep(0, 4);
+            } else if (this.randomFire === 1) {
+                this.fire(ACTIONS.right);
+                this.doRandomStep(0, 4);
+            } else if (this.randomFire === 2) {
+                this.fire(ACTIONS.down);
+                this.doRandomStep(0, 4);
+            } else if (this.randomFire === 3) {
+                this.fire(ACTIONS.left);
+                this.doRandomStep(0, 4);
             }
+
         }
 
-        if (!this._fire) {
-            this._fire = true;
-            this.fire(ACTIONS.up);
-        }
     }
 }
