@@ -287,7 +287,9 @@ export class Playground {
      */
     playerOnFire(botIndex, firePos) {
         const pos = this._positions;
-        const enemyIndex = pos.findIndex(botPos => botPos.x === firePos.x && botPos.y === firePos.y);
+        const enemyIndex = pos.findIndex(
+            (botPos, ind) =>
+                botPos.x === firePos.x && botPos.y === firePos.y && this.statuses[ind] === STATUSES.live);
         if (enemyIndex !== -1) {
             this._statuses[enemyIndex] = STATUSES.dead;
             const {x, y} = pos[enemyIndex];
@@ -338,5 +340,9 @@ export class Playground {
 
     get points() {
         return this._scoreController.points;
+    }
+
+    get statuses() {
+        return this._statuses;
     }
 }

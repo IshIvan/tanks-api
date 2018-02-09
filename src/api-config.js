@@ -7,8 +7,8 @@
  * Скорость не может быть дробным или отрицательным числом.
  */
 export const config = {
-    row: 20,
-    column: 20,
+    row: 10,
+    column: 10,
     stepTime: 200,
     multipleFactorFireSpeed: 2
 };
