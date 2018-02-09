@@ -73,7 +73,8 @@ class App extends Component {
                 {this.state.players.map(this.getPlayerNode.bind(this))}
                 {this.state.fires.map(this.getFireNode.bind(this))}
                 <Score players={this.playground.players}
-                       points={this.playground.points}/>
+                       points={this.playground.points}
+                       statuses={this.playground.statuses}/>
             </div>
         );
     }

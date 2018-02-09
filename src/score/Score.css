@@ -6,6 +6,13 @@
     font-size: 30px;
 }
 
+.Score-Table {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .Score-Item {
-    font-size: 25px;
+    font-size: 20px;
+    padding: 10px;
 }
