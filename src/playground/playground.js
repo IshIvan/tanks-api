@@ -56,6 +56,14 @@ export class Playground {
             .map(column => column.slice())
     }
 
+    get points() {
+        return this._scoreController.points;
+    }
+
+    get statuses() {
+        return this._statuses;
+    }
+
     static _processChangePosition(position, action) {
         switch (action) {
             case ACTIONS.left:
@@ -150,8 +158,12 @@ export class Playground {
     initPlayerPositions() {
         this._positions = new Array(this._bots.length).fill(0);
         /** если объединить fill + map в {@link _isUniquePosition} .every undefined */
-        this._positions = this._positions.map(() => this._createUniquePosition());
-        this._positions.forEach(pos => this._maps[pos.x][pos.y] = CELL_TYPES.player);
+        this._positions = this._positions.map(
+            () => {
+                const pos = this._createUniquePosition();
+                this._maps[pos.x][pos.y] = CELL_TYPES.player;
+                return pos;
+            });
     }
 
     /**
@@ -336,13 +348,5 @@ export class Playground {
     start() {
         this.initSteps();
         setTimeout(this.doStep.bind(this), config.stepTime);
-    }
-
-    get points() {
-        return this._scoreController.points;
-    }
-
-    get statuses() {
-        return this._statuses;
     }
 }
