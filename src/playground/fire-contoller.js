@@ -14,20 +14,35 @@ export class FireController {
     }
 
     /**
+     * Получаем ссылочные выстрелы
+     */
+    get _mutableFires() {
+        return this._fires;
+    }
+
+    /**
+     * Получаем копии выстрелы.
+     */
+    get immutableFires() {
+        return this._fires
+            .map(fire => Object.assign({}, fire));
+    }
+
+    /**
      * Обработка движения выстрелов.
      */
     process() {
         let index = 0;
         while (index < this._mutableFires.length) {
             const {botIndex, position, vector} = this.getByIndex(index);
-            if (!Playground._isPositionExist(position) || this._playground.positionIsBarricade(position)) {
+            if (!Playground._isPositionExist(position)
+                || this._playground.positionIsBarricade(position)
+                || this._playground.playerOnFire(botIndex, position)) {
                 // если вышло за поле, то удаляем
                 this.deleteByIndex(index);
                 continue;
             }
 
-            // иначе изменяем позицию
-            this._playground.playerOnFire(botIndex, position);
             Playground._processChangePosition(position, vector);
             index++;
         }
@@ -59,20 +74,5 @@ export class FireController {
      */
     getByIndex(index) {
         return this._fires[index];
-    }
-
-    /**
-     * Получаем ссылочные выстрелы
-     */
-    get _mutableFires() {
-        return this._fires;
-    }
-
-    /**
-     * Получаем копии выстрелы.
-     */
-    get immutableFires() {
-        return this._fires
-            .map(fire => Object.assign({}, fire));
     }
 }

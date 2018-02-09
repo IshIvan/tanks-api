@@ -175,8 +175,8 @@ export class Playground {
         if (!Playground._isPositionExist(position)) {
             return false;
         }
-        return position
-            && this._maps[position.x][position.y] === CELL_TYPES.ground;
+
+        return this._maps[position.x][position.y] === CELL_TYPES.ground;
     }
 
     /**
@@ -215,7 +215,7 @@ export class Playground {
     canPlayerDoesMoveAction(index, action) {
         const newPos = this.getImmutablePositionByIndex(index);
         Playground._processChangePosition(newPos, action);
-        if (!this._isUniquePosition(newPos)) {
+        if (!(this._isUniquePosition(newPos) && this._statuses[index] === STATUSES.live)) {
             return false;
         }
 
@@ -289,7 +289,10 @@ export class Playground {
             this._statuses[enemyIndex] = STATUSES.dead;
             const {x, y} = pos[enemyIndex];
             this._maps[x][y] = CELL_TYPES.ground;
+            return true;
         }
+
+        return false;
     }
 
     /**
