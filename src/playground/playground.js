@@ -7,6 +7,7 @@ import {CELL_TYPES} from "./config/cell-types";
 import {ReplaySubject} from "rxjs";
 import {FireController} from "./fire-contoller";
 import {randomizeColor} from "./randomize-color";
+import {ScoreController} from "./score-controller";
 
 /**
  * Контроллер карты.
@@ -21,6 +22,8 @@ export class Playground {
         this.initPlayerPositions();
         this.start();
         this._fireController = new FireController(this);
+        this._scoreController = new ScoreController();
+        this._scoreController.init(this.players.length);
         this._doStep$$ = new ReplaySubject(1);
     }
 
@@ -197,7 +200,7 @@ export class Playground {
      * Получаем текущий шаг бота.
      */
     getStepByBotIndex(index) {
-        return this._steps[index] || ACTIONS.nothing;
+        return this._steps[index] > -1 ? this._steps[index] : ACTIONS.nothing;
     }
 
     /**
@@ -289,6 +292,7 @@ export class Playground {
             this._statuses[enemyIndex] = STATUSES.dead;
             const {x, y} = pos[enemyIndex];
             this._maps[x][y] = CELL_TYPES.ground;
+            this._scoreController.addPoint(botIndex);
             return true;
         }
 
@@ -330,5 +334,9 @@ export class Playground {
     start() {
         this.initSteps();
         setTimeout(this.doStep.bind(this), config.stepTime);
+    }
+
+    get points() {
+        return this._scoreController.points;
     }
 }
