@@ -58,6 +58,29 @@ export class Bot {
     }
 
     /**
+     * Упрощенное перемещение.
+     */
+    move(action) {
+        switch (action) {
+            case ACTIONS.left:
+                this.left();
+                break;
+            case ACTIONS.right:
+                this.right();
+                break;
+            case ACTIONS.down:
+                this.down();
+                break;
+            case ACTIONS.up:
+                this.up();
+                break;
+            default:
+                this.up();
+                break;
+        }
+    }
+
+    /**
      * Сделать шаг наверх.
      */
     up() {
