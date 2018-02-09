@@ -344,7 +344,7 @@ export class Playground {
     getEnemyPositionForIndex(index) {
         const myPos = this.getImmutablePositionByIndex(index);
         return this._positions
-            .filter(pos => !(pos.x === myPos.x && pos.y === myPos.y))
+            .filter((pos, ind) => !(pos.x === myPos.x && pos.y === myPos.y) && this.isBotLiveByIndex(ind))
             .map(pos => Object.assign({}, pos));
     }
 
