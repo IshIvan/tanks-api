@@ -205,6 +205,9 @@ export class Playground {
      * Устанавливаем действие по номеру бота.
      */
     setStepByBotIndex(index, step) {
+        if (this._steps[index] === ACTIONS.fire) {
+            return;
+        }
         this._steps[index] = step;
     }
 
