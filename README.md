@@ -80,7 +80,7 @@ export class ExampleBot extends Bot {
 
 Получить объект красной зоны можно:
 ```javascript
-    get strike(): AirStrikeModel
+    get strike(): AirStrikeModel | null
     class AirStrikeModel {
         leftAngle: {x: number, y: number},
         rightAngle: {x: number, y: number}
