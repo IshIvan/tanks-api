@@ -78,12 +78,13 @@ export class ExampleBot extends Bot {
     }
 ```
 
-Получить объект красной зоны можно:
+Получить объект красной зоны можно, где `counter` - количество ходов до удара:
 ```javascript
     get strike(): AirStrikeModel | null
     class AirStrikeModel {
         leftAngle: {x: number, y: number},
-        rightAngle: {x: number, y: number}
+        rightAngle: {x: number, y: number},
+        counter: number
     }
 ```
 
