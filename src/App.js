@@ -5,6 +5,7 @@ import {Player} from "./player/Player";
 import {Playground} from "./playground/playground";
 import {Fire} from "./fire/Fire";
 import {Score} from "./score/Score";
+import {AirStrike} from "./view/airstrike/Airstrike";
 
 class App extends Component {
     constructor() {
@@ -14,6 +15,16 @@ class App extends Component {
             fires: []
         };
         this.initPlayground();
+    }
+
+    /**
+     * Создаем элемент красной зоны.
+     */
+    get strikeNode() {
+        const {strike} = this.playground;
+        return strike !== null
+            ? <AirStrike strike={strike}/>
+            : null;
     }
 
     /**
@@ -72,6 +83,7 @@ class App extends Component {
                 <Ground map={this.playground.immutableMap}/>
                 {this.state.players.map(this.getPlayerNode.bind(this))}
                 {this.state.fires.map(this.getFireNode.bind(this))}
+                {this.strikeNode}
                 <Score players={this.playground.players}
                        points={this.playground.points}
                        statuses={this.playground.statuses}/>

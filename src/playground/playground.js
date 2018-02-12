@@ -8,6 +8,7 @@ import {ReplaySubject} from "rxjs";
 import {FireController} from "./fire-contoller";
 import {randomizeColor} from "./randomize-color";
 import {ScoreController} from "./score-controller";
+import {AirStrikeController} from "../controller/Airstrike/airstrike-controller";
 
 /**
  * Контроллер карты.
@@ -22,6 +23,7 @@ export class Playground {
         this.initPlayerPositions();
         this.start();
         this._fireController = new FireController(this);
+        this._airController = new AirStrikeController();
         this._scoreController = new ScoreController();
         this._scoreController.init(this.players.length);
         this._doStep$$ = new ReplaySubject(1);
@@ -289,8 +291,26 @@ export class Playground {
         this._steps
             .forEach(this._changePositionByIndex.bind(this));
 
+        // регистрируем позиции для авиаудара
+        const airStrikeWasDone = this._airController.registerChanges(this._positions, this._statuses);
+        if (airStrikeWasDone) {
+            this._airStrikeChangesHP();
+        }
         this._doStep$$.next(true);
         this.start();
+    }
+
+    /**
+     * Ищем ботов, попавших под удар.
+     */
+    _airStrikeChangesHP() {
+        const {leftAngle, rightAngle} = this._airController.strike;
+        this._positions.forEach((pos, ind) => {
+           if (leftAngle.x <= pos.x && pos.x <= rightAngle.x
+            && leftAngle.y <= pos.y && pos.y <= rightAngle.y) {
+               this._changeStatus(ind);
+           }
+        });
     }
 
     /**
@@ -309,14 +329,21 @@ export class Playground {
             (botPos, ind) =>
                 botPos.x === firePos.x && botPos.y === firePos.y && this.statuses[ind] === STATUSES.live);
         if (enemyIndex !== -1) {
-            this._statuses[enemyIndex] = STATUSES.dead;
-            const {x, y} = pos[enemyIndex];
-            this._maps[x][y] = CELL_TYPES.ground;
+            this._changeStatus(botIndex);
             this._scoreController.addPoint(botIndex);
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Убиваем бота.
+     */
+    _changeStatus(botIndex) {
+        this._statuses[botIndex] = STATUSES.dead;
+        const {x, y} = this._positions[botIndex];
+        this._maps[x][y] = CELL_TYPES.ground;
     }
 
     /**
@@ -354,5 +381,9 @@ export class Playground {
     start() {
         this.initSteps();
         setTimeout(this.doStep.bind(this), config.stepTime);
+    }
+
+    get strike() {
+        return this._airController.strike;
     }
 }

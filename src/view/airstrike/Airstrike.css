@@ -1,0 +1,12 @@
+.AirStrike {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(255, 0, 0, 0.5);
+    border: 2px dotted red;
+}
+
+.AirStrike-counter {
+    position: absolute;
+    font-size: 30px;
+}
