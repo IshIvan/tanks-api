@@ -16,7 +16,7 @@ export class Api {
     /**
      * Получаем врагов для текущего игрока.
      */
-    get enemyPosition() {
+    get enemies() {
         return this._playground.getEnemyPositionForIndex(this._index);
     }
 

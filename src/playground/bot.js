@@ -27,7 +27,7 @@ export class Bot {
      * @link Api.enemyPosition
      */
     get enemies() {
-        return this._api.enemyPosition;
+        return this._api.enemies;
     }
 
     /**

@@ -10,6 +10,7 @@ import {randomizeColor} from "./randomize-color";
 import {ScoreController} from "./score-controller";
 import {AirStrikeController} from "../controller/Airstrike/airstrike-controller";
 import {HistoryController} from "../controller/History/history-controller";
+import {Enemy} from "../model/common/enemy";
 
 /**
  * Контроллер карты.
@@ -67,6 +68,10 @@ export class Playground {
 
     get statuses() {
         return this._statuses;
+    }
+
+    get strike() {
+        return this._airController.strike;
     }
 
     static _processChangePosition(position, action) {
@@ -295,7 +300,6 @@ export class Playground {
         }
 
 
-
         // регистрируем позиции для авиаудара
         const airStrikeWasDone = this._airController.registerChanges(this._positions, this._statuses);
         if (airStrikeWasDone) {
@@ -309,7 +313,7 @@ export class Playground {
             return;
         }
         bot.doStep();
-        const step =  this._steps[ind];
+        const step = this._steps[ind];
         if (step === ACTIONS.fire) {
             this._historyController.addFireStep(ind, this.fires[this.fires.length - 1]);
         } else {
@@ -325,10 +329,10 @@ export class Playground {
     _airStrikeChangesHP() {
         const {leftAngle, rightAngle} = this._airController.strike;
         this._positions.forEach((pos, ind) => {
-           if (leftAngle.x <= pos.x && pos.x <= rightAngle.x
-            && leftAngle.y <= pos.y && pos.y <= rightAngle.y) {
-               this._changeStatus(ind);
-           }
+            if (leftAngle.x <= pos.x && pos.x <= rightAngle.x
+                && leftAngle.y <= pos.y && pos.y <= rightAngle.y) {
+                this._changeStatus(ind);
+            }
         });
     }
 
@@ -388,9 +392,14 @@ export class Playground {
      * Так как он будет некорректным после вашего индекса.
      */
     getEnemyPositionForIndex(index) {
-        const myPos = this.getImmutablePositionByIndex(index);
         return this._positions
-            .map(pos => Object.assign({}, pos))
+            .map((pos, ind) =>
+                new Enemy({
+                    location: Object.assign({}, pos),
+                    previousStep: this.getLastStepByBotIndex(ind),
+                    name: this._bots[ind].name
+                })
+            )
             .filter((pos, ind) => ind !== index && this.isBotLiveByIndex(ind))
     }
 
@@ -408,9 +417,5 @@ export class Playground {
     start() {
         this.initSteps();
         setTimeout(this.doStep.bind(this), config.stepTime);
-    }
-
-    get strike() {
-        return this._airController.strike;
     }
 }
