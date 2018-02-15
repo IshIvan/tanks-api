@@ -93,5 +93,13 @@ export class Api {
     get gameMap() {
         return this._playground.immutableMap;
     }
+
+    /**
+     * Получаем авиаудар,
+     * @return Strike | null
+     */
+    get strike() {
+        return this._playground.strike;
+    }
 }
 

@@ -156,4 +156,12 @@ export class Bot {
     get gameMapSize() {
         return [config.column, config.row];
     }
+
+    /**
+     * Получаем авиаудар,
+     * @return Strike | null
+     */
+    get strike() {
+        return this._api.strike;
+    }
 }
