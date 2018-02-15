@@ -32,6 +32,11 @@ export class AirStrikeController {
      * Приходят все позиции, необходимо обработать только живых.
      */
     registerChanges(positions, statuses = []) {
+        if (!config.isAirStrikeModeEnabled) {
+            console.warn('Авиаудары выключены в api-config.js');
+            return;
+        }
+
         this._increment(positions, statuses);
         if (this.isStrikeExist) {
             this._decrementTimer();
