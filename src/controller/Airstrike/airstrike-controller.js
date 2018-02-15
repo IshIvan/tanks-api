@@ -56,7 +56,7 @@ export class AirStrikeController {
      * Ищем первоначальную позицию.
      * Если
      */
- _findStartPosition() {
+    _findStartPosition() {
         let y = -1;
         const x = this._maps.findIndex(row => {
             y = row.findIndex(cell => cell > config.airStrikeNumber);
@@ -70,6 +70,11 @@ export class AirStrikeController {
      * Начинаем создание выстрела.
      */
     _start({x, y}) {
+        const percent = Math.ceil(Math.random() * 100);
+        if (percent > config.airStrikePercent) {
+            return;
+        }
+
         this._startStrike(x, y);
         this._resetPoint(x, y);
     }
