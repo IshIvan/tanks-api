@@ -282,21 +282,23 @@ export class Playground {
             .filter((_, ind) => this.isBotLiveByIndex(ind))
             .forEach(bot => bot.doStep());
 
+        this._doStep$$.next(true);
+        this._steps.forEach(this._changePositionByIndex.bind(this));
+        await this.sleep(config.stepTime);
+
         for (let stepIndex = 0; stepIndex < config.multipleFactorFireSpeed; stepIndex++) {
             this._doStep$$.next(false);
             this._fireController.process();
             await this.sleep(config.stepTime);
         }
 
-        this._steps
-            .forEach(this._changePositionByIndex.bind(this));
+
 
         // регистрируем позиции для авиаудара
         const airStrikeWasDone = this._airController.registerChanges(this._positions, this._statuses);
         if (airStrikeWasDone) {
             this._airStrikeChangesHP();
         }
-        this._doStep$$.next(true);
         this.start();
     }
 
@@ -329,7 +331,7 @@ export class Playground {
             (botPos, ind) =>
                 botPos.x === firePos.x && botPos.y === firePos.y && this.statuses[ind] === STATUSES.live);
         if (enemyIndex !== -1) {
-            this._changeStatus(botIndex);
+            this._changeStatus(enemyIndex);
             this._scoreController.addPoint(botIndex);
             return true;
         }
