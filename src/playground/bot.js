@@ -164,4 +164,8 @@ export class Bot {
     get strike() {
         return this._api.strike;
     }
+
+    get history() {
+        return this._api.history;
+    }
 }

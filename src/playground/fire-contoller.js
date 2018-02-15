@@ -52,12 +52,13 @@ export class FireController {
      * Создаем выстред.
      */
     create(index, position, vector) {
-        this._fires.push({
+        const fire = {
             id: this._fireIdSequence++,
             botIndex: index,
             position: position,
             vector: vector
-        });
+        };
+        this._fires.push(fire);
     }
 
     /**

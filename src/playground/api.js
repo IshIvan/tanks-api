@@ -101,5 +101,9 @@ export class Api {
     get strike() {
         return this._playground.strike;
     }
+
+    get history() {
+        return this._playground.getHistoryByBotIndex(this._index);
+    }
 }
 

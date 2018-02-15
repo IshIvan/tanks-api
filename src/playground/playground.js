@@ -9,6 +9,7 @@ import {FireController} from "./fire-contoller";
 import {randomizeColor} from "./randomize-color";
 import {ScoreController} from "./score-controller";
 import {AirStrikeController} from "../controller/Airstrike/airstrike-controller";
+import {HistoryController} from "../controller/History/history-controller";
 
 /**
  * Контроллер карты.
@@ -24,6 +25,8 @@ export class Playground {
         this.start();
         this._fireController = new FireController(this);
         this._airController = new AirStrikeController();
+        this._historyController = new HistoryController();
+        this._historyController.initHistory(this.players.length);
         this._scoreController = new ScoreController();
         this._scoreController.init(this.players.length);
         this._doStep$$ = new ReplaySubject(1);
@@ -279,8 +282,7 @@ export class Playground {
      */
     async doStep() {
         this._bots
-            .filter((_, ind) => this.isBotLiveByIndex(ind))
-            .forEach(bot => bot.doStep());
+            .forEach(this._doStep.bind(this));
 
         this._doStep$$.next(true);
         this._steps.forEach(this._changePositionByIndex.bind(this));
@@ -300,6 +302,21 @@ export class Playground {
             this._airStrikeChangesHP();
         }
         this.start();
+    }
+
+    _doStep(bot, ind) {
+        if (!this.isBotLiveByIndex(ind)) {
+            return;
+        }
+        bot.doStep();
+        const step =  this._steps[ind];
+        if (step === ACTIONS.fire) {
+            this._historyController.addFireStep(ind, this.fires[this.fires.length - 1]);
+        } else {
+            const newPos = this.getImmutablePositionByIndex(ind);
+            Playground._processChangePosition(newPos, step);
+            this._historyController.addMoveStep(ind, step, newPos);
+        }
     }
 
     /**
@@ -373,8 +390,16 @@ export class Playground {
     getEnemyPositionForIndex(index) {
         const myPos = this.getImmutablePositionByIndex(index);
         return this._positions
-            .filter((pos, ind) => !(pos.x === myPos.x && pos.y === myPos.y) && this.isBotLiveByIndex(ind))
-            .map(pos => Object.assign({}, pos));
+            .map(pos => Object.assign({}, pos))
+            .filter((pos, ind) => ind !== index && this.isBotLiveByIndex(ind))
+    }
+
+    getHistoryByBotIndex(ind) {
+        return this._historyController.getHistoryByIndex(ind);
+    }
+
+    getLastStepByBotIndex(ind) {
+        return this._historyController.getLastStepByBotIndex(ind);
     }
 
     /**
