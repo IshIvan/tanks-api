@@ -187,13 +187,21 @@ export class Playground {
      */
     _createUniquePosition() {
         let position = null;
-        while (!this._isUniquePosition(position)) {
+        while (!this._isUniquePosition(position) || this._isPointNearByPlayer(position)) {
             position = {
                 x: +(Math.random() * config.column).toFixed(0),
                 y: +(Math.random() * config.row).toFixed(0)
             };
         }
         return position;
+    }
+
+    _isPointNearByPlayer(point) {
+        let variants = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        return variants
+            .filter(([dx, dy]) => this._maps[point.x + dx] && this._maps[point.x + dx][point.y + dy])
+            .map(([dx, dy]) => this._maps[point.x + dx][point.y + dy])
+            .some((type) => type === CELL_TYPES.player);
     }
 
     /**
