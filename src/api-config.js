@@ -16,5 +16,5 @@ export const config = {
     multipleFactorFireSpeed: 2,
     airStrikeNumber: 2,
     airStrikePercent: 20,
-    isAirStrikeModeEnabled: false
+    isAirStrikeModeEnabled: true
 };

@@ -102,6 +102,9 @@ export class Api {
         return this._playground.strike;
     }
 
+    /**
+     * Получить историю.
+     */
     get history() {
         return this._playground.getHistoryByBotIndex(this._index);
     }

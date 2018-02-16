@@ -14,11 +14,11 @@ export class AirStrikeModel {
      * Создаем левый верхний и правый нижний угол.
      */
     _generate(radius) {
-        this.leftAngle = {
+        this.topLeft = {
           x: Math.max(this.center.x - radius, 0),
           y: Math.max(this.center.y - radius, 0)
         };
-        this.rightAngle = {
+        this.bottomRight = {
             x: Math.min(this.center.x + radius, config.row),
             y: Math.min(this.center.y + radius, config.column)
         }

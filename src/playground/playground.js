@@ -327,10 +327,10 @@ export class Playground {
      * Ищем ботов, попавших под удар.
      */
     _airStrikeChangesHP() {
-        const {leftAngle, rightAngle} = this._airController.strike;
+        const {topLeft, bottomRight} = this._airController.strike;
         this._positions.forEach((pos, ind) => {
-            if (leftAngle.x <= pos.x && pos.x <= rightAngle.x
-                && leftAngle.y <= pos.y && pos.y <= rightAngle.y) {
+            if (topLeft.x <= pos.x && pos.x <= bottomRight.x
+                && topLeft.y <= pos.y && pos.y <= bottomRight.y) {
                 this._changeStatus(ind);
             }
         });

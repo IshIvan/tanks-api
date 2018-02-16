@@ -165,6 +165,9 @@ export class Bot {
         return this._api.strike;
     }
 
+    /**
+     * Получить историю.
+     */
     get history() {
         return this._api.history;
     }

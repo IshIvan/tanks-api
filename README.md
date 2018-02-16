@@ -82,8 +82,8 @@ export class ExampleBot extends Bot {
 ```javascript
     get strike(): AirStrikeModel | null
     class AirStrikeModel {
-        leftAngle: {x: number, y: number},
-        rightAngle: {x: number, y: number},
+        topLeft: {x: number, y: number},
+        bottomRight: {x: number, y: number},
         counter: number
     }
 ```
