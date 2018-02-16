@@ -5,7 +5,7 @@ import {config} from "../api-config";
 
 export class VishnyaBot extends Bot {
     battleground;
-    friends = ['N O G I B A T O R'];
+    friends = ['Уборщик мусора'];
     forcedEnemyName;
     config = {
         preventRepeatCounter: 0,

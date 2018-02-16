@@ -65,6 +65,7 @@ class App extends Component {
         const action = this.playground.getStepByBotIndex(ind);
         const isLive = this.playground.isBotLiveByIndex(ind);
         return <Player imgStyle={player.style.imgStyle}
+                       name={player.name}
                        action={action}
                        live={isLive}
                        key={ind}

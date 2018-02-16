@@ -82,6 +82,7 @@ export class Mngame extends Bot {
             return;
         }
         const range = enemies
+            .map(b => b.location)
             .map(pos => (myPos.x - pos.x) ^ 2 + (myPos.y - pos.y) ^ 2);
         const minRangeIndex = range.reduce((prev, curr, ind, arr) => Math.min(arr[prev], curr) === curr ? ind : prev, 0);
         const minRangeEnemyPos = enemies[minRangeIndex];

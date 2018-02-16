@@ -11,9 +11,9 @@
  * Скорость не может быть дробным или отрицательным числом.
  */
 export const config = {
-    row: 10,
-    column: 10,
-    stepTime: 200,
+    row: 25,
+    column: 25,
+    stepTime: 50,
     multipleFactorFireSpeed: 2,
     airStrikeNumber: 2,
     airStrikePercent: 20,

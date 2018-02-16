@@ -85,6 +85,7 @@ export class Player extends Component {
                  style={this.state.style}
             >
                 <div className="Player-img" style={this.state.imgStyle}></div>
+                <div className="Player-name">{this.props.name}</div>
             </div>
         );
     }
