@@ -9,10 +9,10 @@ export class AirStrike extends Component {
     stylize() {
         const {strike} = this.props;
         return {
-            left: strike.leftAngle.x * CELL_SIZE,
-            top: strike.leftAngle.y * CELL_SIZE,
-            width: (strike.rightAngle.x - strike.leftAngle.x) * CELL_SIZE,
-            height: (strike.rightAngle.y - strike.leftAngle.y) * CELL_SIZE
+            left: strike.topLeft.x * CELL_SIZE,
+            top: strike.topLeft.y * CELL_SIZE,
+            width: (strike.bottomRight.x - strike.topLeft.x) * CELL_SIZE,
+            height: (strike.bottomRight.y - strike.topLeft.y) * CELL_SIZE
         };
     }
 
@@ -22,8 +22,8 @@ export class AirStrike extends Component {
     textStylize() {
         const {strike} = this.props;
         return {
-            left: 0.5 * (strike.rightAngle.x + strike.leftAngle.x) * CELL_SIZE,
-            top: 0.5 * (strike.rightAngle.y + strike.leftAngle.y) * CELL_SIZE
+            left: 0.5 * (strike.bottomRight.x + strike.topLeft.x) * CELL_SIZE,
+            top: 0.5 * (strike.bottomRight.y + strike.topLeft.y) * CELL_SIZE
         };
     }
 

@@ -31,6 +31,11 @@ export class Playground {
         this._scoreController = new ScoreController();
         this._scoreController.init(this.players.length);
         this._doStep$$ = new ReplaySubject(1);
+        this._win$$ = new ReplaySubject(1);
+    }
+
+    get winner$() {
+        return this._win$$.asObservable();
     }
 
     /**
@@ -288,7 +293,9 @@ export class Playground {
     async doStep() {
         this._bots
             .forEach(this._doStep.bind(this));
-
+        // проверка выстрелов без изменения их позиции
+        // необходимо для мгновенной регистрации первого положения выстрела
+        this._fireController.process(false);
         this._doStep$$.next(true);
         this._steps.forEach(this._changePositionByIndex.bind(this));
         await this.sleep(config.stepTime);
@@ -305,9 +312,48 @@ export class Playground {
         if (airStrikeWasDone) {
             this._airStrikeChangesHP();
         }
-        this.start();
+
+        if (this._isWin()) {
+            this._addScoreToWinner();
+            this._doStep$$.next(true);
+            this._pushWinner();
+        } else {
+            this.start();
+        }
     }
 
+    /**
+     * Достигнуто ли условие победы.
+     */
+    _isWin() {
+        const liveBotNumber = this._statuses.filter((_, ind) => this.isBotLiveByIndex(ind)).length;
+        return liveBotNumber < 2;
+    }
+
+    /**
+     * Добавить очки при победе бота.
+     * Подразумевается, что победить может только один.
+     */
+    _addScoreToWinner() {
+        const winnerIndex = this._statuses.findIndex((_, i) => this.isBotLiveByIndex(i));
+        this._scoreController.addPoint(winnerIndex, config.winnerPoints);
+    }
+
+    /**
+     * Отправляем победителя.
+     */
+    _pushWinner() {
+        const winnerIndex = this._scoreController.winnerIndex;
+        const winner = {
+            name: this._bots[winnerIndex].name,
+            score: this.points[winnerIndex]
+        };
+        this._win$$.next(winner);
+    }
+
+    /**
+     * Обработчик каждого хода ботов.
+     */
     _doStep(bot, ind) {
         if (!this.isBotLiveByIndex(ind)) {
             return;
@@ -327,10 +373,10 @@ export class Playground {
      * Ищем ботов, попавших под удар.
      */
     _airStrikeChangesHP() {
-        const {leftAngle, rightAngle} = this._airController.strike;
+        const {topLeft, bottomRight} = this._airController.strike;
         this._positions.forEach((pos, ind) => {
-            if (leftAngle.x <= pos.x && pos.x <= rightAngle.x
-                && leftAngle.y <= pos.y && pos.y <= rightAngle.y) {
+            if (topLeft.x <= pos.x && pos.x <= bottomRight.x
+                && topLeft.y <= pos.y && pos.y <= bottomRight.y) {
                 this._changeStatus(ind);
             }
         });

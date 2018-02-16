@@ -13,8 +13,18 @@ export class ScoreController {
     /**
      * Добавляем одно очко.
      */
-    addPoint(botIndex) {
-        this._score[botIndex]++;
+    addPoint(botIndex, point = 1) {
+        if (botIndex > -1 && botIndex < this.points.length) {
+            this._score[botIndex] += point;
+        }
+    }
+
+    /**
+     * Получить индекс победителя.
+     */
+    get winnerIndex() {
+        return this._score.reduce((prev, curr, i) =>
+            Math.max(this.points[prev], curr) === curr ? i : prev, 0);
     }
 
     /**

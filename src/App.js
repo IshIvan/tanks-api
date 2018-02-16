@@ -6,13 +6,15 @@ import {Playground} from "./playground/playground";
 import {Fire} from "./fire/Fire";
 import {Score} from "./score/Score";
 import {AirStrike} from "./view/airstrike/Airstrike";
+import {Winner} from "./view/Winner/Winner";
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
             players: [],
-            fires: []
+            fires: [],
+            winner: null
         };
         this.initPlayground();
     }
@@ -28,6 +30,16 @@ class App extends Component {
     }
 
     /**
+     * Создаем элемент информации о победителе.
+     */
+    get winnerNode() {
+        const {winner} = this.state;
+        return winner
+            ? <Winner winner={winner}/>
+            : null;
+    }
+
+    /**
      * Создаем игровой контроллер.
      * Подписываемся на него.
      */
@@ -36,6 +48,9 @@ class App extends Component {
         this.playground
             .stepper$
             .subscribe(this.setStepProps.bind(this));
+        this.playground
+            .winner$
+            .subscribe(this.setWinner.bind(this));
     }
 
     componentWillMount() {
@@ -77,6 +92,13 @@ class App extends Component {
         })
     }
 
+    /**
+     * Записываем победителя в состояние.
+     */
+    setWinner(winner) {
+        this.setState({winner});
+    }
+
     render() {
         return (
             <div className="App">
@@ -87,6 +109,7 @@ class App extends Component {
                 <Score players={this.playground.players}
                        points={this.playground.points}
                        statuses={this.playground.statuses}/>
+                {this.winnerNode}
             </div>
         );
     }
