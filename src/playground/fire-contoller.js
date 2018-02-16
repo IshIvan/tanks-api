@@ -31,7 +31,7 @@ export class FireController {
     /**
      * Обработка движения выстрелов.
      */
-    process() {
+    process(withChangePosition = true) {
         let index = 0;
         while (index < this._mutableFires.length) {
             const {botIndex, position, vector} = this.getByIndex(index);
@@ -43,7 +43,9 @@ export class FireController {
                 continue;
             }
 
-            Playground._processChangePosition(position, vector);
+            if (withChangePosition) {
+                Playground._processChangePosition(position, vector);
+            }
             index++;
         }
     }

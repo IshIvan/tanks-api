@@ -8,3 +8,7 @@
 .App-intro {
     font-size: large;
 }
+
+#root, html, body, .App {
+    height: 100%;
+}

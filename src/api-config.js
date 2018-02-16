@@ -7,6 +7,7 @@
  * @param airStrikeNumber - количество раз, которое необходимо для начала обстрела зоны.
  * @param airStrikePercent - процент вероятности срабатывания авиаудара по области.
  * @param isAirStrikeModeEnabled - включены ли авиаудары в принципе.
+ * @param winnerPoints - количество очков, которое получит бот в случае победы.
  * Скорость не может быть дробным или отрицательным числом.
  */
 export const config = {
@@ -16,5 +17,6 @@ export const config = {
     multipleFactorFireSpeed: 2,
     airStrikeNumber: 2,
     airStrikePercent: 20,
-    isAirStrikeModeEnabled: true
+    isAirStrikeModeEnabled: true,
+    winnerPoints: 2
 };
