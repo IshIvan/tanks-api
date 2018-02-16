@@ -88,7 +88,7 @@ export class AirStrikeController {
      * Создание выстрела
      */
     _startStrike(x, y) {
-        const radius = Math.round(Math.random() * 5);
+        const radius = Math.ceil(Math.random() * 5);
         this._destroyStepTimer = radius;
         this._strike = new AirStrikeModel({x0: x, y0: y, radius})
     }
