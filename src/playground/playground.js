@@ -196,12 +196,14 @@ export class Playground {
         return position;
     }
 
+    /**
+     * Точка рядом с игроком.
+     */
     _isPointNearByPlayer(point) {
-        let variants = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        return variants
-            .filter(([dx, dy]) => this._maps[point.x + dx] && this._maps[point.x + dx][point.y + dy])
-            .map(([dx, dy]) => this._maps[point.x + dx][point.y + dy])
-            .some((type) => type === CELL_TYPES.player);
+        return [[1, 0], [-1, 0], [0, 1], [0, -1]]
+            .some(([dx, dy]) =>
+                this._maps[point.x + dx] &&
+                this._maps[point.x + dx][point.y + dy] === CELL_TYPES.player);
     }
 
     /**
